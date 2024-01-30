@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- ***** Product Area Starts ***** -->
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <ul class="nav">
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        <style>
+        .word {
+            display: inline-block;
+            transition: font-size 0.3s;
+            margin-right: 5px; /* Add some spacing between words */
+        }
+
+        .word:hover {
+            font-size: 20px; /* Increase the font size on hover */
+        }
+    </style>
+</head
+
+        <!-- Existing menu items -->
+        <li class="submenu">
+            <a href="javascript:;">Categories</a>
+            <ul>
+                {% for i in cat %}
+                    <li><a href="{% url 'products_by_category' i.slug %}">{{ i.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        <!-- Other menu items -->
+    </ul>
+    <section class="section" id="product">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="left-images">
+                        <br>
+                        <br>
+                        <img src="{{ i.img.url }}" alt="" style="width: 400px; height: 400px; transition: width 0.3s, height 0.3s;" onmouseover="hoverImage(this)" onmouseout="unhoverImage(this)">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="right-content">
+                     <form action="{% url 'add_to_cart' %}" method="post">
+    <input type="hidden" name="product_id" value="{{ i.id }}">
+    <input type="hidden" name="total_price" value="{{ total_price|floatformat:2 }}">
+    {% csrf_token %}
+    <h4 style="font-size: 30px; color: red; transition: font-size 0.3s, color 0.3s;" onmouseover="this.style.fontSize='70px'; this.style.color='blue'" onmouseout="this.style.fontSize='30px'; this.style.color='red'">{{ i.name }}</h4>
+    <span>₹{{ i.price }}</span>
+    <br>
+    <h6 style="font-size: 20px;"><u></u>Specification</U></h6>
+    <hr>
+    <span>{{ i.desc }}</span>
+    <section class="quantity-content">
+        <div class="left-content">
+            <h6 style="color: {% if i.stock == 0 %}red{% else %}green{% endif %};">Stock: {{ i.stock }}</h6>
+            <h6 id="total-price" style="font-size: {% if total_price < 50 %}22px{% else %}22px{% endif %};">Total: ₹{{ total_price|floatformat:2 }}</h6>
+        </div>
+        <br>
+      <div class="right-content">
+    <div class="quantity buttons_added">
+        <button type="button" class="blue-button" onclick="decrementQuantity()">-</button>
+        <input type="number" step="1" min="1" max="{{ i.stock }}" name="quantity" id="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode="" oninput="updateTotalPrice()">
+        <button type="button" class="blue-button" onclick="incrementQuantity()">+</button>
+    </div>
+</div>
+    </section>
+    <div style="text-align: right;">
+        <!-- ... Other product information ... -->
+        <!-- Example usage in your HTML -->
+        <button type="submit" class="rounded-button">Add to Cart</button>
+</form>
+    <button class="rounded-button">Buy Now</button>
+                         </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<style>
+    .blue-button {
+        background-color: blue;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        margin: 3px;
+        transition: background-color 0.3s ease;
+    }
+
+    .blue-button:hover {
+        background-color: #4a8a06;
+    }
+</style>
+
+<style>
+    .rounded-button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .rounded-button:hover {
+        background-color: #0c0d0d;
+    }
+</style>
+<script>
+    function hoverImage(img) {
+        img.style.width = "450px";
+        img.style.height = "450px";
+    }
+
+    function unhoverImage(img) {
+        img.style.width = "450px";
+        img.style.height = "450px";
+        img.style.transition = "width 0.3s, height 0.3s"; // Add this line to reset transition
+        img.style.left = "0"; // Add this line to reset left position
+        img.style.top = "0"; // Add this line to reset top position
+    }
+</script>
+<script>
+    function updateTotalPrice() {
+        var price = parseFloat("{{ i.price }}");
+        var quantityInput = document.getElementById('quantity');
+        var quantity = parseFloat(quantityInput.value);
+        var total_price = price * quantity;
+
+        var totalPriceElement = document.getElementById('total-price');
+        totalPriceElement.style.color = total_price < 50 ? 'red' : 'black';
+        totalPriceElement.style.fontSize = total_price < 50 ? '22px' : '22px';
+
+        // Format the total_price to two decimal places
+        var formattedTotalPrice = total_price.toFixed(2);
+
+        totalPriceElement.innerHTML = 'Total: ₹' + formattedTotalPrice;
+    }
+
+   function incrementQuantity() {
+    var quantityInput = document.getElementById('quantity');
+    var currentQuantity = parseInt(quantityInput.value);
+    var maxStock = parseInt('{{ i.stock }}');
+
+    if (currentQuantity < maxStock) {
+        quantityInput.value = currentQuantity + 1;
+        updateTotalPrice();
+    }
+}
+
+function decrementQuantity() {
+    var quantityInput = document.getElementById('quantity');
+    var currentQuantity = parseInt(quantityInput.value);
+
+    if (currentQuantity > 1) {
+        quantityInput.value = currentQuantity - 1;
+        updateTotalPrice();
+    }
+}
+
+
+    // Call updateTotalPrice to show the default total price on page load
+    updateTotalPrice();
+</script>
+
+
+<script>
+    function addToCart() {
+        const productId = "{{ i.id }}";  // Replace with the actual ID of your product
+        const quantity = document.getElementById('quantity').value;
+
+        // Make an AJAX request to save to the cart
+        fetch('/add_to_cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',  // Include CSRF token for security
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: quantity,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle success or error response
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Other JavaScript functions...
+</script>
+{% endblock %}

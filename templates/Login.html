@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+< <style>
+        /* Center the login form */
+        .login-form {
+            margin-top: 1em;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+      .messages {
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28%;
+    text-align: center;
+    z-index: 1000;
+}
+
+.alert {
+    margin-top: 1em;
+    padding: 1em;
+    border-radius: 0.25rem;
+}
+
+/* Success alert style */
+.alert-success {
+    background-color: #28a745; /* Green background for success */
+    color: #fff; /* White text color for success */
+}
+
+/* Error alert style */
+.alert-error {
+    background-color: #dc3545; /* Red background for error */
+    color: #fff; /* White text color for error */
+}
+
+
+
+
+        /* Additional styling for the messages */
+        .alert {
+            margin-top: 1em;
+            padding: 1em;
+        }
+    </style>
+
+
+
+    <!-- Your existing HTML content -->
+<br>
+<br>
+<br>
+<br>
+<br>
+    <div class="login-form">
+        <div style="padding: 1em;" class="col-lg-5 rounded mx-auto border pt-4">
+            <img src="{% static 'images/login.png' %}" style="width: 400px; height: 200px; display: block; margin: auto; text-align: center;">
+
+            <form method="post"  action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <br>
+                    <input required type="text" name="username" id="username" class="form-control" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password">
+                </div>
+                <button type="submit" style="width: 100%; background-color: #215bed; color: #FFFFFF;" class="btn btn-primary">Login</button>
+                <br>
+                <br>
+                <a href="{% url 'register' %}"><h6 style="color:darkgreen;text-align:right">Sign up</h6></a>
+            </form>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div id="messages-container" class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+        <script>
+            // Show messages for 2 seconds
+            setTimeout(function () {
+                $("#messages-container").fadeOut("slow", function () {
+                    // Remove the messages div after fading out
+                    $(this).remove();
+                });
+            }, 2000);
+        </script>
+    {% endif %}
+{% endblock %}

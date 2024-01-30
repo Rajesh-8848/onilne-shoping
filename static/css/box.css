@@ -1,0 +1,25 @@
+/* Add this style to your existing CSS or create a new CSS file */
+
+.search-box form {
+    display: flex;
+}
+
+.search-box input[type="text"] {
+    width: 400px; /* Set the width to your desired value */
+    padding: 4px;
+    border-radius: 2px;
+}
+
+.search-box button {
+    padding: 5px 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Add transition for a smooth effect */
+}
+
+.search-box button:hover {
+    background-color: #45a049; /* Change the background color on hover */
+}

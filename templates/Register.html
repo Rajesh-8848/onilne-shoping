@@ -1,0 +1,106 @@
+{{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+   .rounded-box {
+    max-width: 500px;
+    width: 100%;
+    padding: 40px; /* Adjusted padding */
+    padding-top: 20px; /* Added padding-top */
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    margin: 100px auto;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  input {
+    width: calc(100% - 16px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  button {
+    background-color: #2ecc71;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #27ae60;
+  }
+
+  .error-message {
+    color: red;
+  }
+</style>
+
+<div class="rounded-box">
+   <div style="text-align: center;">
+        <img src="{% static 'images/signup.png' %}" alt="Signup Image" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+    </div>
+  <hr style="color:blue">
+  <form method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+
+    <!-- General form error message -->
+    {% if form.non_field_errors %}
+    <div class="error-message">
+      {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+      <input required type="text" name="username" id="username" class="form-control" placeholder="Username">
+      {% if form.errors.username %}
+        <label class="error-message">{{ form.errors.username }}</label>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <input required type="text" name="email" id="email" class="form-control" placeholder="Email">
+      {% if form.errors.email %}
+        <label class="error-message">{{ form.errors.email }}</label>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <input required type="password" name="password1" id="password1" class="form-control" placeholder="Type password">
+      {% if form.errors.password1 %}
+        <label class="error-message">{{ form.errors.password1 }}</label>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+      <input required type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password">
+      {% if form.errors.password2 %}
+        <label class="error-message">{{ form.errors.password2 }}</label>
+      {% endif %}
+    </div>
+
+    <hr style="color:blue" />
+
+    <button type="submit">Sign Up</button>
+    <br>
+    <br>
+    <a href="{% url 'login' %}"><label>Already Have an Account</label></a>
+  </form>
+</div>
+{% endblock %}

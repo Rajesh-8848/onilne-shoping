@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% block content %}
+ <style>
+        .rounded-box {
+            border-radius: 10px;
+            padding: 20px; /* Set a reasonable padding */
+            margin: 100px 0;
+            background-color: #f0f0f0;
+            text-align: center; /* Center the text horizontally */
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center the children horizontally */
+            justify-content: center; /* Center the children vertically */
+        }
+
+        .rounded-box h1 {
+            background-color: orange;
+            color: black;
+            padding: 10px;
+            margin-top: 100px; /* Adjust the margin-top as needed */
+        }
+    </style>
+    <div class="rounded-box">
+        <h1>My Cart products</h1>
+        <p>Buy Soon, Few Hours left for Out of Stock.</p>
+    </div>
+
+ <body style="background-color: lightblue;">
+    <div class="cart-container">
+        {% if cart_items %}
+            <ul>
+                {% for item in cart_items %}
+                    <div class="cart-item">
+                        <div>
+                             <form action="{% url 'update_to_cart' %}" method="post">
+                                 {% csrf_token %}
+                                 <input type="hidden" name="item_id" value="{{ item.id }}">
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="item-image">
+                        </div>
+                        <div class="item-details">
+                            <h5>{{ item.name }} - ₹{{ item.price }}</h5>
+                         <div class="quantity">
+    <button type="button" class="blue-button" onclick="decrementQuantity('{{ item.id }}', {{ item.price }})">-</button>
+    <input type="number" step="1" min="1" max="{{ item.name.stock }}" name="quantity" class="input-text qty text" size="4" pattern="" inputmode="" value="{{ item.quantity }}" id="quantity{{ item.id }}" oninput="updatePrice('{{ item.id }}', {{ item.price }}, this)">
+    <button type="button" class="blue-button" onclick="incrementQuantity('{{ item.id }}', {{ item.price }}, {{ item.name.stock }})">+</button>
+</div>
+
+                            <span>Total Rate-</span>
+                            <b><a style="color:green"><span id="total-price{{ item.id }}"> ₹{{ item.total_price|floatformat:2 }}<a/></b></span>
+                            {% if item.name %}
+                            <br>
+                             <b style="color:black"><span class="stock-info">Stock:</b> <b><a style="color:Darkred">{{ item.name.stock }}</a></b></span>
+                            {% else %}
+                                <span class="stock-info">Stock information not available</span>
+                            {% endif %}
+                            <br>
+                            <input type="hidden" name="action" value="update">
+                            <button type="submit" class="green-button" onclick="confirmUpdate()">Update</button>
+                        </form>
+                            <form action="{% url 'delete_from_cart' %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+    <input type="hidden" name="item_id" value="{{ item.id }}">
+    <button type="submit" class="blue-button" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+</form>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+
+          <style>
+    .blue-button, .green-button, .orange-button {
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+.blue-button {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0px;
+}
+
+.green-button {
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 0px; /* Adjusted border-radius for different size */
+}
+
+.orange-button {
+    background-color: #fd7e14;
+    color: #fff;
+    border-radius: 5px; /* Adjusted border-radius for different size */
+}
+
+/* Hover effects */
+.blue-button:hover {
+    background-color: #0056b3;
+}
+
+.green-button:hover {
+    background-color: #218838;
+}
+
+.orange-button:hover {
+    background-color: #dd6b00;
+}
+
+        .cart-header {
+            text-align: center;
+            margin-top: 0;
+            font-size: 12px;
+        }
+       .cart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-top: 0px solid #ffff;
+    padding-top: 30px;
+    margin-top: 10px;
+     margin-top: 10px;
+}
+
+.cart-item {
+    width: 450px; /* Adjust width as needed */
+    height: 200px;
+    margin: 0 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    background-color: white;
+    transition: box-shadow 0.3s ease; /* Add a transition for a smooth effect */
+}
+
+.cart-item:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a box-shadow on hover */
+}
+
+        .item-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .item-image {
+            width: 150px;
+            height: 150px;
+            border-right:  2px solid #ddd;
+        }
+
+        .item-details {
+            flex: 1;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: left;
+            justify-content: left;
+            margin-top: 10px;
+        }
+
+        .blue-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .input-text {
+            width: 40px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        #total-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .stock-info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+
+         <style>
+        .rounded-box {
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f0f0f0; /* Adjust the background color as needed */
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .messages li {
+            margin-bottom: 5px;
+        }
+
+        /* Add additional styles for different message tags if needed */
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        /* Add more styles as necessary */
+    </style>
+
+
+
+
+
+    <script>
+        function updatePrice(itemId, price, inputElement) {
+            var quantity = parseFloat(inputElement.value);
+
+            // Check if quantity is a valid number
+            if (isNaN(quantity)) {
+                console.error("Invalid quantity value");
+                return;
+            }
+
+            var total_price = price * quantity;
+
+            var totalPriceElement = document.getElementById('total-price' + itemId);
+            totalPriceElement.textContent = '₹' + total_price.toFixed(2);
+        }
+
+     function incrementQuantity(itemId, price, maxStock) {
+    var quantityInput = document.getElementById('quantity' + itemId);
+    var currentQuantity = parseInt(quantityInput.value);
+
+    // Check if the current quantity is less than the available stock
+    if (currentQuantity < maxStock) {
+        quantityInput.value = Math.min(currentQuantity + 1, maxStock);
+        updatePrice(itemId, price, quantityInput);
+    }
+}
+
+        function decrementQuantity(itemId, price) {
+            var quantityInput = document.getElementById('quantity' + itemId);
+            quantityInput.value = Math.max(parseInt(quantityInput.value) - 1, 1);
+            updatePrice(itemId, price, quantityInput);
+        }
+    </script>
+
+<!-- Your HTML structure -->
+
+
+ </body>
+{% endblock %}

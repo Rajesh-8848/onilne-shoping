@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&display=swap">
+<style>
+    .custom-alert {
+        background-color: blue;
+        color: white;
+        padding: 8px; /* Add padding for better visual appearance */
+        overflow: hidden; /* Hide any overflow content */
+        text-align: left; /* Center align text within the container */
+    }
+
+    .custom-alert p {
+        white-space: nowrap; /* Prevent text from wrapping to the next line */
+        font-size: 24px; /* Set the font size */
+        color: white; /* Set the color of the p tag */
+        font-family: 'Roboto Mono';
+        margin: 0; /* Remove default margin to center text */
+        position: relative; /* Enable relative positioning */
+        overflow: hidden; /* Hide any overflow content */
+    }
+    .scrolling-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: scrollText 30s linear infinite; /* Scrolling animation for the entire paragraph */
+    }
+
+    .blink-text {
+        display: inline-block; /* Make it an inline block to avoid full-width */
+        animation: blinkText 1s ease infinite; /* Blinking animation for the word "New" */
+        background-color: black; /* Set background color to black */
+        font-family: 'Catamaran';
+        color: red; /* Set text color to red */
+    }
+
+    @keyframes scrollText {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes blinkText {
+        0%, 49.9%, 100% {
+            opacity: 1; /* Make the text visible during these keyframes */
+        }
+        50%, 99.9% {
+            opacity: 0; /* Make the text invisible during these keyframes */
+        }
+    }
+
+    .scrolling-text:hover {
+        animation-play-state: paused; /* Pause the scrolling animation on hover */
+    }
+
+</style>
+
+<br>
+<br>
+<br>
+<br>
+<div class="custom-alert" role="alert">
+    <p>
+        <b><span class="scrolling-text">
+            The offer is valid for trades executed in all segments i.e., Equity Cash, Equity
+            Derivatives, Currency, and commodity derivatives during the offer period - 24th
+            January 2024 to 28th January 2024
+        </span></b>
+        <span class="blink-text"><b>Latest Offer</b></span>
+    </p>
+</div>
+<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="2000">
+      <img src="{% static 'images/banner-bg.png' %}" class="d-block w-100" alt="First Slide" style="width: 1344px; height: 450px";>
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="{% static 'images/slide2.png' %}" class="d-block w-100" alt="Second Slide" style="width: 1344px; height: 450px";>
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="{% static 'images/slid4.png' %}" class="d-block w-100" alt="Third Slide" style="width: 1344px; height: 450px";>
+    </div>
+  <!-- Add Previous and Next buttons -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+    <section class="section" id="men">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="section-heading">
+                        <h2>Latest Collections</h2>
+                        <span> Our Collections is convenient and offers a variety of products you may not be able to find at your local stores. It's easier to comparison shop online, where you can access prices, reviews, and product details with Us.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h1 style="text-align: center; font-weight: bold;">Today Offerd Products for you</h1>
+        <br>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="men-item-carousel">
+                        <div class="owl-men-item owl-carousel">
+                            {% for product in pro %}
+                                <div class="item">
+                                    <div class="thumb">
+                                        <div class="hover-content">
+                                            <ul>
+                                                {% if product.slug %}
+                                                <li><a href="{% url 'product_detail' product_slug=product.slug %}"><i class="fa fa-eye"></i></a></li>
+                                                 {% else %}
+                                                     <li></li><a href=""><i class="fa fa-eye"></i></a></li>
+                                                 {% endif %}
+                                                  <li><a href=""><i class="fa fa-star"></i></a></li>
+                                                <li><a href=""><i class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <img src="{{ product.img.url }}" alt="{{ product.name }}" style="width: 300px; height: 200px;">
+                                    </div>
+                                    <div class="down-content">
+                                        <h4>{{ product.name }}</h4>
+                                   <div>
+    <span style="color: green; background-color: white;margin-left: auto;">
+        <span style="text-decoration: line-through; color: red;">₹{{ product.old_price }}</span>
+    </span>
+       <span style="color: blue;margin-right: auto;">₹{{ product.price }}</span>
+</div>
+
+                                        <ul class="stars">
+                                            {% for _ in product.stars %}
+                                                <li><i class="fa fa-star"></i></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Men Area Ends ***** -->
+{% endblock %}

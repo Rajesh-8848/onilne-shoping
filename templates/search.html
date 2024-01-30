@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <!-- ***** Products Area Starts ***** -->
+    <section class="section" id="products">
+       <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-heading">
+                        <br>
+                        <br>
+                        <h2 style="font-size: 70px;"></h2>
+                        {% if no_results_message %}
+                            <img src="{% static 'images/no-product-found.png' %}" alt="" width="600" height="400">
+                        {% endif %}
+                        <h2 style="font-size: 70px;"></h2>
+                        {% if no_results_button %}
+                            <img src="{% static 'images/no-message-button.png' %}" alt="" width="400" height="250">
+                            <br>
+                            <br>
+                         <p style="font-size: 30px; color: #037305;"><b><i>Please Enter query in Search bar</i></b></p>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                {% for product in pr %}
+                    <div class="col-lg-4">
+                        <div class="item">
+                            <div class="thumb">
+                                <div class="hover-content">
+                                    <ul>
+                                        {% if product.slug %}
+                                            <li><a href="{% url 'product_detail' product_slug=product.slug %}"><i class="fa fa-eye"></i></a></li>
+                                        {% else %}
+                                            <li></li><a href=""><i class="fa fa-eye"></i></a></li>
+                                        {% endif %}
+                                        <li><a href=""><i class="fa fa-star"></i></a></li>
+                                        <li><a href=""><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                </div>
+                                {% if product.slug %}
+                                    <a href="{% url 'product_detail' product_slug=product.slug %}"> <img src="{{ product.img.url }}" alt="{{ product.name }}" style="width: 300px; height: 200px;"></a>
+                                {% else %}
+                                    <img src="{{ product.img.url }}" alt="{{ product.name }}" style="width: 300px; height: 200px;">
+                                {% endif %}
+                            </div>
+                            <div class="down-content">
+                                <h4>{{ product.name }}</h4>
+                               <span style="background-color: green; color: white; display: inline-block;">₹{{ product.price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="pagination">
+                <ul>
+                    {% if prod and prod.has_previous %}
+                        <li>
+                            <a href="?page=1">&laquo;&laquo;</a>
+                        </li>
+                        <li>
+                            <a href="?page={{ prod.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in prod.paginator.page_range %}
+                        <li class="{% if prod.number == i %}active{% endif %}">
+                            <a href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if prod and prod.has_next %}
+                        <li>
+                            <a href="?page={{ prod.next_page_number }}">&raquo;</a>
+                        </li>
+                        <li>
+                            <a href="?page={{ prod.paginator.num_pages }}">&raquo;&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endblock %}

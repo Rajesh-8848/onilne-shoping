@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-hexashop.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl-carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/lightbox.css' %}">
+    <link rel="stylesheet" href="{% static 'css/box.css' %}">
+
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <title>e-frame</title>
+    <link rel="icon" href="{% static 'images/icon.jpg' %}" type="image/png">
+    </head>
+    <body>
+    <!-- ***** Preloader Start ***** -->
+    <div id="preloader">
+        <div class="jumper">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+  <header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                 <nav class="main-nav">
+                    <a href="{% url 'home' %}" class="logo">
+                        <img src="{% static 'images/logo.png' %}">
+                    </a>
+ <ul class="nav">
+<form action="{% url 'search' %}" method="get" id="search-form">
+    <input
+        type="text"
+        name="q"
+        placeholder="search here..."
+        style="padding: 5px; border: 1px solid #08e4fc; width: 400px; font-size: 16px; color: #ed5f82; font-family: 'Arial', sans-serif;"
+        onfocus="this.style.border='2px solid #08e4fc'; this.style.width='400px';"
+        onblur="this.style.border='1px solid #08e4fc'; this.style.width='400px';"
+    >
+    <img src="{% static 'images/search1.png' %}" alt="Search" style="cursor: pointer; width: 30px; height: 30px;"
+        onmouseover="changeImage('{% static 'images/search2.png' %}');"
+        onmouseout="changeImage('{% static 'images/search3.png' %}');"
+        onclick="submitForm();"
+    >
+</form>
+</li>
+                        <li class="scroll-to-section"><a href="{% url 'home' %}" class="active">Home<img src="{% static 'images/home.jpg' %}" alt="Icon" width="20" height="20"></a></li>
+                      <li class="submenu">
+    <a href="javascript:;">Categories<img src="{% static 'images/catagories.png' %}" alt="Icon" width="20" height="20"></a>
+    <ul>
+        {% for i in cat %}
+            <li><a href="{% url 'products_by_category' i.slug %}">{{ i.name }}<img src="{% static 'images/list.png' %}" alt="Icon" width="20" height="20" style="float: right;"></a></li>
+        {% endfor %}
+    </ul>
+</li>
+<li class="scroll-to-section">
+    <a href="{% url 'viewcart' %}">Cart <span style="color: red;">({{ cart_items_count }})</span>
+        <img src="{% static 'images/cart.png' %}" alt="Icon" width="30" height="30">
+    </a>
+</li>
+{% if request.user.is_authenticated %}
+    <li class="submenu">
+        <img src="{% static 'images/user.gif' %}" alt="Icon" width="90" height="45"><br>
+        <ul>
+            <li><a href=""><b>{{ request.user.username }}</b></a></li>
+            <li><a href="">Orders</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </li>
+{% else %}
+    <li class="submenu">
+        <a href="{% url 'login' %}">Account</a>
+        <ul>
+            <li><a href="{% url 'login' %}">Login<img src="{% static 'images/login.png' %}" alt="Icon" width="30" height="30"></a></li>
+            <li><a href="{% url 'register' %}">Signup<img src="{% static 'images/signup.png' %}" alt="Icon" width="30" height="30"></a></li>
+        </ul>
+    </li>
+{% endif %}
+                 </nav>
+            </div>
+        </div>
+</div>
+
+</header>
+
+{% block content %}
+
+{% endblock %}
+
+    <!-- ***** Footer Start ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="first-item">
+                        <div class="logo">
+                            <a href="{% url 'home' %}"> <img src="{% static 'images/logo-2.png' %}" alt="hexashop ecommerce templatemo"></a>
+                        </div>
+                        <ul>
+                            <li><a href="#">11/2 Vandiperiyar Idukki,Kerala INDIA</a></li>
+                            <li><a href="#">www.eframe.com</a></li>
+                            <li><a href="#">1472583691</a></li>
+                        </ul>
+                    </div>
+                </div>
+               <div class="col-lg-3">
+    <h4>Shopping &amp; Categories</h4>
+    <select id="categoryDropdown">
+        <option value="{% url 'home' %}">All Categories</option>
+        {% for i in cat %}
+            <option value="{% url 'products_by_category' i.slug %}">{{ i.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+                <div class="col-lg-3">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Homepage</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h4>Help &amp; Information</h4>
+                    <ul>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">FAQ's</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Tracking ID</a></li>
+                    </ul>
+                </div>
+                    <div class="under-footer">
+                        <p>Copyright © 2024 e-frame. All Rights Reserved.
+                        <br>Design: Avodha Student</p>
+                    </div>
+    </footer>
+
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery-2.1.0.min.js' %}"></script>
+
+    <!-- Bootstrap -->
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- Plugins -->
+    <script src="{% static 'js/owl-carousel.js' %}"></script>
+    <script src="{% static 'js/accordions.js' %}"></script>
+    <script src="{% static 'js/datepicker.js' %}"></script>
+    <script src="{% static 'js/scrollreveal.min.js' %}"></script>
+    <script src="{% static 'js/waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'js/imgfix.min.js' %}"></script>
+    <script src="{% static 'js/slick.js' %}"></script>
+    <script src="{% static 'js/lightbox.js' %}"></script>
+    <script src="{% static 'js/isotope.js' %}"></script>
+
+    <!-- Global Init -->
+    <script src="{% static 'js/custom.js' %}"></script>
+
+  </body>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var submenuCategories = document.querySelectorAll(".main-nav .submenu a");
+
+            if (submenuCategories.length > 0) {
+                submenuCategories.forEach(function (categoryLink) {
+                    categoryLink.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        window.location.href = this.getAttribute("href"); // Redirect to the selected category page
+                    });
+                });
+            }
+        });
+
+
+        $(function() {
+            var selectedClass = "";
+            $("p").click(function(){
+            selectedClass = $(this).attr("data-rel");
+            $("#portfolio").fadeTo(50, 0.1);
+                $("#portfolio div").not("."+selectedClass).fadeOut();
+            setTimeout(function() {
+              $("."+selectedClass).fadeIn();
+              $("#portfolio").fadeTo(50, 1);
+            }, 500);
+
+            });
+        });
+
+
+
+       function changeImage(newSrc) {
+        document.getElementById('search-img').src = newSrc;
+    }
+
+    function submitForm() {
+        document.getElementById('search-form').submit();
+    }
+
+     document.addEventListener("DOMContentLoaded", function () {
+        var categoryDropdown = document.getElementById("categoryDropdown");
+        if (categoryDropdown) {
+            categoryDropdown.addEventListener("change", function () {
+                window.location.href = this.value; // Redirect to the selected category page
+            });
+        }
+    });
+
+    </script>
+      <style>
+    .nav li a:hover {
+        background-color: #0a0a0a; /* Change this to your desired hover color */
+        color: white; /* Change this to your desired text color on hover */
+    }
+
+             /* Add this CSS to your stylesheet or in a style tag in your HTML */
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-content {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+</style>
+
+</html>
